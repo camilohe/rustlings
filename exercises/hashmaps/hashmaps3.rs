@@ -14,7 +14,7 @@
 // Execute `rustlings hint hashmaps3` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
+// I AM DONE
 
 use std::collections::HashMap;
 
@@ -39,8 +39,81 @@ fn build_scores_table(results: String) -> HashMap<String, Team> {
         // will be the number of goals conceded from team_2, and similarly
         // goals scored by team_2 will be the number of goals conceded by
         // team_1.
+        // 3
+        let score = get_updated_score(scores.get(&team_1_name), &team_1_name, team_1_score, team_2_score);
+        scores.insert(team_1_name, score);
+
+        let score = get_updated_score(scores.get(&team_2_name), &team_2_name, team_2_score, team_1_score);
+        scores.insert(team_2_name, score);
+
+        // 2
+        // let score = match scores.get(&team_1_name) {
+        //     Some(t) => Team {
+        //         goals_scored: t.goals_scored + team_1_score,
+        //         goals_conceded: t.goals_conceded + team_2_score,
+        //     },
+        //     None => Team {
+        //         goals_scored: team_1_score,
+        //         goals_conceded: team_2_score,
+        //     }
+        // };
+        // scores.insert(team_1_name, score);
+
+        // let score = match scores.get(&team_2_name) {
+        //     Some(t) => Team {
+        //         goals_scored: t.goals_scored + team_2_score,
+        //         goals_conceded: t.goals_conceded + team_1_score,
+        //     },
+        //     None => Team {
+        //         goals_scored: team_2_score,
+        //         goals_conceded: team_1_score,
+        //     }
+        // };
+        // scores.insert(team_2_name, score);
+
+        // 1
+        // if let Some(t) = scores.get(&team_1_name) {
+        //     let u = Team {
+        //         goals_scored: t.goals_scored + team_1_score,
+        //         goals_conceded: t.goals_conceded + team_2_score,
+        //     };
+        //     scores.insert(team_1_name, u);
+        // } else {
+        //     let u = Team {
+        //         goals_scored: team_1_score,
+        //         goals_conceded: team_2_score,
+        //     };
+        //     scores.insert(team_1_name, u);
+        // }
+
+        // if let Some(t) = scores.get(&team_2_name) {
+        //     let u = Team {
+        //         goals_scored: t.goals_scored + team_2_score,
+        //         goals_conceded: t.goals_conceded + team_1_score,
+        //     };
+        //     scores.insert(team_2_name, u);
+        // } else {
+        //     let u = Team {
+        //         goals_scored: team_2_score,
+        //         goals_conceded: team_1_score,
+        //     };
+        //     scores.insert(team_2_name, u);
+        // }
     }
     scores
+}
+
+fn get_updated_score(score: Option<&Team>, team_1_name: &str, team_1_score: u8, team_2_score: u8) -> Team {
+     match score {
+        Some(t) => Team {
+            goals_scored: t.goals_scored + team_1_score,
+            goals_conceded: t.goals_conceded + team_2_score,
+        },
+        None => Team {
+            goals_scored: team_1_score,
+            goals_conceded: team_2_score,
+        }
+    }
 }
 
 #[cfg(test)]
