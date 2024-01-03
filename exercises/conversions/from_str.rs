@@ -31,7 +31,7 @@ enum ParsePersonError {
     ParseInt(ParseIntError),
 }
 
-// I AM NOT DONE
+// I AM DONE
 
 // Steps:
 // 1. If the length of the provided string is 0, an error should be returned
@@ -51,9 +51,53 @@ enum ParsePersonError {
 
 impl FromStr for Person {
     type Err = ParsePersonError;
+
     fn from_str(s: &str) -> Result<Person, Self::Err> {
+        if s.is_empty() {
+            return Err(ParsePersonError::Empty);
+        }
+
+        let parts: Vec<&str> = s.split(',').collect();
+        match parts.as_slice() {
+            [name, age] => {
+                let name = name.trim();
+                let age = age.trim().parse::<usize>();
+                match (name, age) {
+                    ("", _) => Err(ParsePersonError::NoName),
+                    (_, Err(x)) => Err(ParsePersonError::ParseInt(x)),
+                    (name, Ok(age)) => Ok(Person {
+                        name: name.to_string(),
+                        age,
+                    }),
+                }
+            }
+            _ => Err(ParsePersonError::BadLen),
+        }
     }
 }
+
+// impl FromStr for Person {
+//     type Err = ParsePersonError;
+//     fn from_str(s: &str) -> Result<Person, Self::Err> {
+//         if s.is_empty() {
+//             return Err(ParsePersonError::Empty);
+//         }
+
+//         let parts: Vec<&str> = s.split(',').collect();
+//         if parts.len() != 2 {
+//             return Err(ParsePersonError::BadLen);
+//         }
+//         let name = parts[0].trim().to_string();
+//         if name.is_empty() {
+//             return Err(ParsePersonError::NoName);
+//         }
+//         let age_result = parts[1].trim().parse::<usize>();
+//         match age_result {
+//             Ok(age) => Ok(Person { name, age }),
+//             Err(x) => Err(ParsePersonError::ParseInt(x)),
+//         }
+//     }
+// }
 
 fn main() {
     let p = "Mark,20".parse::<Person>().unwrap();

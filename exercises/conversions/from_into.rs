@@ -40,12 +40,70 @@ impl Default for Person {
 // If while parsing the age, something goes wrong, then return the default of
 // Person Otherwise, then return an instantiated Person object with the results
 
-// I AM NOT DONE
+// I AM DONE
 
 impl From<&str> for Person {
     fn from(s: &str) -> Person {
+        s.split(',')
+            .map(str::trim)
+            .collect::<Vec<&str>>()
+            .split_first()
+            .and_then(|(n, a)| {
+                if n.is_empty() {
+                    None
+                } else {
+                    Some(Person {
+                        name: n.trim().to_string(),
+                        age: a.first()?.trim().parse().ok()?,
+                    })
+                }
+            })
+            .unwrap_or_default()
     }
 }
+
+// fn from(s: &str) -> Person {
+//     s.split(',')
+//         .map(str::trim)
+//         .collect::<Vec<&str>>()
+//         .split_first()
+//         .and_then(|(n, a)| {
+//             // if n.is_empty() {
+//             //     return Some(Person::default());
+//             // }
+//             if n.is_empty() {
+//                 None
+//             } else {
+//                 Some(Person {
+//                     name: n.trim().to_string(),
+//                     age: a.first()?.trim().parse().ok()?,
+//                 })
+//             }
+//         })
+//         .unwrap_or_default()
+// }
+
+// impl From<&str> for Person {
+//     fn from(s: &str) -> Person {
+//         if s.is_empty() {
+//             return Person::default();
+//         }
+
+//         let parts: Vec<&str> = s.split(',').collect();
+//         if parts.len() < 2 {
+//             return Person::default();
+//         }
+//         let name = parts[0].trim().to_string();
+//         if name.is_empty() {
+//             return Person::default();
+//         }
+//         let age_result = parts[1].trim().parse::<usize>();
+//         match age_result {
+//             Ok(age) => Person { name, age },
+//             Err(_) => Person::default(),
+//         }
+//     }
+// }
 
 fn main() {
     // Use the `from` function
